@@ -19,14 +19,9 @@ function handleImage(file, imageNumber)
   imageHandler.loadImageFromFile(file, imageNumber);
 }
 
-function handleFamilyImage(evt) 
+function handleBackgroundImage(evt) 
 {
   handleImage(evt.target.files[0], 1);
-}
-
-function handleBigAssImage(evt) 
-{
-  handleImage(evt.target.files[0], 2);
 }
 
 function handleLine1(evt) 
@@ -34,21 +29,12 @@ function handleLine1(evt)
   stateManager.setLine1(evt.target.value);
 }
 
-function handleFocus1(evt) 
+function handleTextFocus(evt) 
 {
   const target = evt.target;
 
-  if (evt.target.value.toUpperCase() === 'THE LIFE OF PABLO')
-   {
-    target.value = '';
-  }
-}
-
-function handleFocus2(evt) 
-{
-  const target = evt.target;
-
-  if (evt.target.value.toUpperCase() === 'WHICH/ONE') {
+  if (evt.target.value.toUpperCase() === 'DAILY BRUIN TEST QUOTE')
+  {
     target.value = '';
   }
 }
@@ -62,14 +48,14 @@ function downloadCover(evt)
 }
 
 document.getElementById('background-image')  
-    .addEventListener('change', handleFamilyImage, false);
+    .addEventListener('change', handleBackgroundImage, false);
   
   document.getElementById('line1')
     .addEventListener('input', handleLine1, false);
   
   
   document.getElementById('line1')
-    .addEventListener('focus', handleFocus1, false);
+    .addEventListener('focus', handleTextFocus, false);
   
   document.getElementById('download')
     .addEventListener('click', downloadCover, false);
