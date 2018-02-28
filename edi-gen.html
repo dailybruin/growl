@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DB - Editorial Quote Generator</title>
+  <meta name="description" content="Daily Bruin Internal Tool - Editorial Quote Generator">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles/styles.css?v=3">
+</head>
+
+<body class="page">
+  <div class="ie-warning" style="display: none;">Your browser is not supported!</div>
+  <div class="container">
+    
+    <div class="inputs">
+      <input id="line1" type="text" class="inputs__text" value="" />
+      <div class="inputs__image">
+        <p class="inputs__image-text">Background Image</p>
+        <input id="background-image" type="file" accept="image/*"/>
+      </div>
+    </div>
+    <div id="ediCanvas-container" class="cover">
+      <canvas id="ediCanvas" class="cover__canvas" width="1024" height="1024"></canvas>
+      <a id="download" class="cover__download" href='#' target="_blank">Get Image</a>
+    </div>
+  </div>
+  <script src="src_pub/bundle.js"></script>
+</body>
+</html>
