@@ -40,10 +40,6 @@ const renderState = () =>
   const ctx = canvas.getContext('2d');
   const state = stateManager.getState();
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#f98a5f';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   // Background Image rendering
   if (typeof state.image1.image !== 'undefined') 
   {
@@ -53,18 +49,19 @@ const renderState = () =>
       state.image1.dy,
       state.image1.width,
       state.image1.height,
-      0, 0, canvas.width, canvas.height);
+      0, 0, 
+      canvas.width, canvas.height);
   }
 
   // Line 1
   textSize = Math.floor(ctx.canvas.height * 0.063);
-  canvasMaxWidth = Math.floor(ctx.canvas.width - ctx.canvas.width * 0.05);
-  ctx.font = `bold ${textSize}px sans-serif`;
+  canvasMaxWidth = Math.floor(ctx.canvas.width - ctx.canvas.width * 0.10);
+  ctx.font = `${textSize}px 'Cormorant Garamond'`;
   ctx.fillStyle = 'white';
-  ctx.textAlign = 'center';
-  textX = ctx.canvas.width / 2;
-  textY = ctx.canvas.height / 2;
-  wrapText(ctx, state.line1, textX, textY, canvasMaxWidth, textSize);
+  ctx.textAlign = 'left';
+  textX = ctx.canvas.width / 20; //reciprocal of half maxwidth scaling factor 3 lines up
+  textY = ctx.canvas.height / 3.5;
+  wrapText(ctx, state.line1, textX, textY, canvasMaxWidth, textSize + 10);
 };
 
 stateManager.addSubscriber(renderState);
@@ -73,7 +70,7 @@ stateManager.addSubscriber(renderState);
 const getCover = () => 
 {
   var image = new Image();
-	image.src = ctx.toDataURL("image/png");
+	image.src = ctx.toDataURL("image/jpg");
 	return image;
 };
 

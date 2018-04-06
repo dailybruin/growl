@@ -7,7 +7,7 @@
 // ::
 
 const state = {
-  line1: 'Daily Bruin Test Quote',
+  line1: '\"The Undergraduate Students Association Council was created for the purpose of giving students agency in a university riddled with bureaucracy and administrative jargon. Too bad this year’s council has decided to cede its authority to the very administrators it should be holding accountable.\"',
   image1: {}
 };
 const subscribers = [];
@@ -38,18 +38,11 @@ const setImage1 = (image) =>
   callSubscribers();
 };
 
-const setImage2 = (image) => 
-{
-  state.image2 = image;
-  callSubscribers();
-};
-
 const getState = () => state;
 
 module.exports = {
   addSubscriber,
   setLine1,
   setImage1,
-  setImage2,
   getState
 };

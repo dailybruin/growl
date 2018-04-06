@@ -1,4 +1,4 @@
-(function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 // :: entry.js
 /*
     Acts as our "entry-point," setting everything up for us.
@@ -12,17 +12,17 @@ spiritually similar to #include "imageHandler" */
 const renderer = require('./renderer');
 const stateManager = require('./stateManager');
 const imageHandler = require('./imageHandler');
-const defaultImage = "./img/blackBackground.jpg";
+const defaultImage = "./img/editorialbg.jpg";
 
-function handleImage(file, imageNumber) 
-{
-  imageHandler.loadImageFromFile(file, imageNumber);
-}
+// function handleImage(file, imageNumber) 
+// {
+//   imageHandler.loadImageFromFile(file, imageNumber);
+// }
 
-function handleBackgroundImage(evt) 
-{
-  handleImage(evt.target.files[0], 1);
-}
+// function handleBackgroundImage(evt) 
+// {
+//   handleImage(evt.target.files[0], 1);
+// }
 
 function handleLine1(evt) 
 {
@@ -33,32 +33,46 @@ function handleTextFocus(evt)
 {
   const target = evt.target;
 
-  if (evt.target.value.toUpperCase() === 'DAILY BRUIN TEST QUOTE')
+  if (evt.target.value.toUpperCase() === 'Enter Text Here!')
   {
     target.value = '';
   }
 }
 
-function downloadCover(evt) 
-{
-  const target = evt.target;
-  const cover = renderer.getCover();
 
-  target.href = cover;
+//v1
+// function downloadCover(evt) 
+// {
+//   const target = evt.target;
+//   const cover = renderer.getCover();
+
+//   target.href = "editorial.jpg";
+// }
+
+//v2
+function downloadCover(link, canvasId, filename) {
+  link.href = document.getElementById(canvasId).toDataURL();
+  link.download = filename;
 }
 
-document.getElementById('background-image')  
-    .addEventListener('change', handleBackgroundImage, false);
+// document.getElementById('background-image')  
+//     .addEventListener('change', handleBackgroundImage, false);
   
   document.getElementById('line1')
     .addEventListener('input', handleLine1, false);
-  
-  
+
+
+//v2
+  document.getElementById('download').addEventListener('click', function() {
+  downloadCover(this, 'ediCanvas', 'test.png');},
+  false);
+
   document.getElementById('line1')
     .addEventListener('focus', handleTextFocus, false);
   
-  document.getElementById('download')
-    .addEventListener('click', downloadCover, false);
+  //v1
+  // document.getElementById('download')
+  //   .addEventListener('click', downloadCover, false);
 
 function init() 
 {
@@ -66,6 +80,7 @@ function init()
   const state = stateManager.getState();
 
   input1.value = state.line1;
+  // defaultImage.setAttribute('crossOrigin', 'anonymous');
   imageHandler.renderImage(defaultImage, 1);
 }
 
@@ -87,18 +102,18 @@ const calculateSourceCoordinates = (width, height, ratio) =>
   let srcHeight = height;
   let dx = 0;
   let dy = 0;
-  const realRatio = width / height;
+  // const realRatio = width / height;
 
-  if (realRatio < ratio) 
-  {
-    srcHeight = width / ratio;
-    dy = (height - srcHeight) / 2;
-  } 
-  else if (realRatio > ratio) 
-  {
-    srcWidth = height / ratio;
-    dx = (width - srcWidth) / 2;
-  }
+  // if (realRatio < ratio) 
+  // {
+  //   srcHeight = width / ratio;
+  //   dy = (height - srcHeight) / 2;
+  // } 
+  // else if (realRatio > ratio) 
+  // {
+  //   srcWidth = height / ratio;
+  //   dx = (width - srcWidth) / 2;
+  // }
 
   return {
     width: srcWidth,
@@ -112,7 +127,7 @@ const renderImage = (src, imageNumber) =>
 {
   const image = new Image();
   image.onload = () => {
-    const ratio = imageNumber === 1 ? 1.5 : 1;
+    const ratio = 1;
     const srcCoords = calculateSourceCoordinates(image.width, image.height, ratio);
     const imageData = {
       image,
@@ -124,26 +139,24 @@ const renderImage = (src, imageNumber) =>
 
     if (imageNumber === 1) {
       stateManager.setImage1(imageData);
-    } else {
-      stateManager.setImage2(imageData);
     }
   };
   image.src = src;
 };
 
-const loadImageFromFile = (src, imageNumber) => {
+// const loadImageFromFile = (src, imageNumber) => {
 
-  const reader = new FileReader();
+//   const reader = new FileReader();
 
-  reader.onload = (e) => 
-  {
-    renderImage(e.target.result, imageNumber);
-  };
-  reader.readAsDataURL(src);
-};
+//   reader.onload = (e) => 
+//   {
+//     renderImage(e.target.result, imageNumber);
+//   };
+//   reader.readAsDataURL(src);
+// };
 
 module.exports = {
-  loadImageFromFile,
+  // loadImageFromFile,
   renderImage
 };
 
@@ -190,10 +203,6 @@ const renderState = () =>
   const ctx = canvas.getContext('2d');
   const state = stateManager.getState();
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#f98a5f';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   // Background Image rendering
   if (typeof state.image1.image !== 'undefined') 
   {
@@ -203,18 +212,19 @@ const renderState = () =>
       state.image1.dy,
       state.image1.width,
       state.image1.height,
-      0, 0, canvas.width, canvas.height);
+      0, 0, 
+      canvas.width, canvas.height);
   }
 
   // Line 1
   textSize = Math.floor(ctx.canvas.height * 0.063);
-  canvasMaxWidth = Math.floor(ctx.canvas.width - ctx.canvas.width * 0.05);
-  ctx.font = `bold ${textSize}px sans-serif`;
+  canvasMaxWidth = Math.floor(ctx.canvas.width - ctx.canvas.width * 0.10);
+  ctx.font = `${textSize}px 'Cormorant Garamond'`;
   ctx.fillStyle = 'white';
-  ctx.textAlign = 'center';
-  textX = ctx.canvas.width / 2;
-  textY = ctx.canvas.height / 2;
-  wrapText(ctx, state.line1, textX, textY, canvasMaxWidth, textSize);
+  ctx.textAlign = 'left';
+  textX = ctx.canvas.width / 20; //reciprocal of half maxwidth scaling factor 3 lines up
+  textY = ctx.canvas.height / 3.5;
+  wrapText(ctx, state.line1, textX, textY, canvasMaxWidth, textSize + 10);
 };
 
 stateManager.addSubscriber(renderState);
@@ -223,7 +233,7 @@ stateManager.addSubscriber(renderState);
 const getCover = () => 
 {
   var image = new Image();
-	image.src = ctx.toDataURL("image/png");
+	image.src = ctx.toDataURL("image/jpg");
 	return image;
 };
 
@@ -242,7 +252,7 @@ module.exports = {
 // ::
 
 const state = {
-  line1: 'Daily Bruin Test Quote',
+  line1: '\"The Undergraduate Students Association Council was created for the purpose of giving students agency in a university riddled with bureaucracy and administrative jargon. Too bad this year’s council has decided to cede its authority to the very administrators it should be holding accountable.\"',
   image1: {}
 };
 const subscribers = [];
@@ -273,19 +283,12 @@ const setImage1 = (image) =>
   callSubscribers();
 };
 
-const setImage2 = (image) => 
-{
-  state.image2 = image;
-  callSubscribers();
-};
-
 const getState = () => state;
 
 module.exports = {
   addSubscriber,
   setLine1,
   setImage1,
-  setImage2,
   getState
 };
 

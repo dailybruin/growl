@@ -31,8 +31,7 @@ html, body {
 .inputs {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
-  flex-grow: 1;
-  flex-basis: auto;
+  clear: both;
 }
 
 .inputs__text {
@@ -70,11 +69,11 @@ html, body {
 
 .cover__canvas {
   border: 1px solid black;
-  width: 100%;
-  height: 100%;
   text-align: center;
-  max-width: 26em;
-  max-height: 26em;
+}
+
+#ediCanvas-container {
+  clear: both;
 }
 
 .cover__download {
@@ -91,6 +90,7 @@ html, body {
   outline: none;
   border: 3px solid black;
   max-width: 24em;
+  cursor:pointer;
 }
 
 @media only screen {

@@ -11,17 +11,17 @@ spiritually similar to #include "imageHandler" */
 const renderer = require('./renderer');
 const stateManager = require('./stateManager');
 const imageHandler = require('./imageHandler');
-const defaultImage = "./img/blackBackground.jpg";
+const defaultImage = "./img/editorialbg.jpg";
 
-function handleImage(file, imageNumber) 
-{
-  imageHandler.loadImageFromFile(file, imageNumber);
-}
+// function handleImage(file, imageNumber) 
+// {
+//   imageHandler.loadImageFromFile(file, imageNumber);
+// }
 
-function handleBackgroundImage(evt) 
-{
-  handleImage(evt.target.files[0], 1);
-}
+// function handleBackgroundImage(evt) 
+// {
+//   handleImage(evt.target.files[0], 1);
+// }
 
 function handleLine1(evt) 
 {
@@ -32,32 +32,46 @@ function handleTextFocus(evt)
 {
   const target = evt.target;
 
-  if (evt.target.value.toUpperCase() === 'DAILY BRUIN TEST QUOTE')
+  if (evt.target.value.toUpperCase() === 'Enter Text Here!')
   {
     target.value = '';
   }
 }
 
-function downloadCover(evt) 
-{
-  const target = evt.target;
-  const cover = renderer.getCover();
 
-  target.href = cover;
+//v1
+// function downloadCover(evt) 
+// {
+//   const target = evt.target;
+//   const cover = renderer.getCover();
+
+//   target.href = "editorial.jpg";
+// }
+
+//v2
+function downloadCover(link, canvasId, filename) {
+  link.href = document.getElementById(canvasId).toDataURL();
+  link.download = filename;
 }
 
-document.getElementById('background-image')  
-    .addEventListener('change', handleBackgroundImage, false);
+// document.getElementById('background-image')  
+//     .addEventListener('change', handleBackgroundImage, false);
   
   document.getElementById('line1')
     .addEventListener('input', handleLine1, false);
-  
-  
+
+
+//v2
+  document.getElementById('download').addEventListener('click', function() {
+  downloadCover(this, 'ediCanvas', 'test.png');},
+  false);
+
   document.getElementById('line1')
     .addEventListener('focus', handleTextFocus, false);
   
-  document.getElementById('download')
-    .addEventListener('click', downloadCover, false);
+  //v1
+  // document.getElementById('download')
+  //   .addEventListener('click', downloadCover, false);
 
 function init() 
 {
@@ -65,6 +79,7 @@ function init()
   const state = stateManager.getState();
 
   input1.value = state.line1;
+  // defaultImage.setAttribute('crossOrigin', 'anonymous');
   imageHandler.renderImage(defaultImage, 1);
 }
 
