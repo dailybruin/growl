@@ -32,9 +32,28 @@ html, body {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   clear: both;
+  position: relative;
+  width: 500px;
+  height: 100px;
+  margin: 0 auto;
 }
 
 .inputs__text {
+  position: relative;
+  display: block;
+  box-sizing: padding-box;
+  overflow: hidden;
+  padding: 10px;
+  width: 400px;
+  max-width: 400px;
+  font-size: 14px;
+  margin: 50px auto;
+  border-radius: 6px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  border: 0;
+}
+
+/* .inputs__text {
   margin: 1em auto 1em;
   font-size: 1.5em;
   text-transform: uppercase;
@@ -47,8 +66,7 @@ html, body {
   background-color: gray;
   width: 100%;
   max-width: 12em;
-}
-
+} */
 .inputs__image {
   margin: 1em 0 0 1em;
 }
@@ -90,7 +108,7 @@ html, body {
   outline: none;
   border: 3px solid black;
   max-width: 24em;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 @media only screen {
@@ -98,15 +116,13 @@ html, body {
     flex-direction: column;
   }
 }
-
 @media only screen and (min-width: 24em) {
   .inputs__text {
     font-size: 2em;
   }
 }
-
-@media only screen and (min-width: 48em) { 
+@media only screen and (min-width: 48em) {
   .container {
     flex-direction: row;
   }
-} 
+}

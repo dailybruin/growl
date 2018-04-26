@@ -1,4 +1,4 @@
-(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 // :: entry.js
 /*
     Acts as our "entry-point," setting everything up for us.
@@ -12,6 +12,7 @@ spiritually similar to #include "imageHandler" */
 const renderer = require('./renderer');
 const stateManager = require('./stateManager');
 const imageHandler = require('./imageHandler');
+// const docPrep = require('./docPrep');
 const defaultImage = "./img/editorialbg.jpg";
 
 // function handleImage(file, imageNumber) 
@@ -24,8 +25,17 @@ const defaultImage = "./img/editorialbg.jpg";
 //   handleImage(evt.target.files[0], 1);
 // }
 
+
+function resize (text) 
+{
+  text.style.height = 'auto';
+  text.style.height = text.scrollHeight+'px';
+}
+
 function handleLine1(evt) 
 {
+  var text = document.getElementById("line1");
+  resize(text);
   stateManager.setLine1(evt.target.value);
 }
 
@@ -51,7 +61,10 @@ function handleTextFocus(evt)
 
 //v2
 function downloadCover(link, canvasId, filename) {
-  link.href = document.getElementById(canvasId).toDataURL();
+  var image = new Image();
+  image.crossOrigin = "*";
+  image.src = renderer.getCover();
+  link.href = image;
   link.download = filename;
 }
 
@@ -61,10 +74,9 @@ function downloadCover(link, canvasId, filename) {
   document.getElementById('line1')
     .addEventListener('input', handleLine1, false);
 
-
 //v2
   document.getElementById('download').addEventListener('click', function() {
-  downloadCover(this, 'ediCanvas', 'test.png');},
+  downloadCover(this, 'ediCanvas', 'editorial.png');},
   false);
 
   document.getElementById('line1')
@@ -82,10 +94,10 @@ function init()
   input1.value = state.line1;
   // defaultImage.setAttribute('crossOrigin', 'anonymous');
   imageHandler.renderImage(defaultImage, 1);
+  resize(input1);
 }
 
 init();
-
 },{"./imageHandler":2,"./renderer":3,"./stateManager":4}],2:[function(require,module,exports){
 // :: imageHandler.js
 /*
@@ -232,9 +244,7 @@ stateManager.addSubscriber(renderState);
 // Allows you to get the generated quote.
 const getCover = () => 
 {
-  var image = new Image();
-	image.src = ctx.toDataURL("image/jpg");
-	return image;
+  return document.getElementById(ediCanvas).toDataURL();
 };
 
 module.exports = {

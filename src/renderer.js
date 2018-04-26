@@ -69,9 +69,7 @@ stateManager.addSubscriber(renderState);
 // Allows you to get the generated quote.
 const getCover = () => 
 {
-  var image = new Image();
-	image.src = ctx.toDataURL("image/jpg");
-	return image;
+  return document.getElementById(ediCanvas).toDataURL();
 };
 
 module.exports = {

@@ -5,7 +5,7 @@
   <title>DB - Editorial Quote Generator</title>
   <meta name="description" content="Daily Bruin Internal Tool - Editorial Quote Generator">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="styles/styles.css?v=3">
+  <link rel="stylesheet" href="styles_pub/styles.css?v=3">
 </head>
 
 <body class="page">
@@ -13,7 +13,7 @@
   <div class="container">
     
     <div class="inputs">
-      <input id="line1" type="text" class="inputs__text" value="" />
+      <textarea id="line1" type="text" class="inputs__text" value="" rows="3" data-min-rows="3"></textarea>
       <!-- <div class="inputs__image">
         <p class="inputs__image-text">Background Image</p>
         <input id="background-image" type="file" accept="image/*"/>
@@ -21,9 +21,10 @@
     </div>
     <div id="ediCanvas-container" class="cover">
       <canvas id="ediCanvas" class="cover__canvas" width="640px" height="320px"></canvas>
-      <a id="download" class="cover__download">Get Image</a>
+      <a id="download" class="cover__download" download="download">Get Image</a>
     </div>
   </div>
+  <script src="src_pub/jquery.js"></script>
   <script src="src_pub/bundle.js"></script>
 </body>
 </html>
