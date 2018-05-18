@@ -13,11 +13,6 @@ app.use(cors({
 	origin: true
 }));
 
-router.get('/upload', function(req, res) {
-    res.setHeader('Content-Type', 'image/png');
-    draw().pngStream().pipe(res);
-})
-
 app.use('/', express.static('public'))
 
 server.listen(config.port, () => {

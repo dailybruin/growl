@@ -67,10 +67,6 @@ function downloadCover(link, canvasId, filename) {
   image.src = renderer.getCover() + '?' + ts;
   link.href = image;
   link.download = filename;
-    // var cv = document.getElementById("ediCanvas").toDataURL("image/png");
-    // cv = cv.replace(/^data:image\/(png|jpg);base64,/, "");
-
-    // axios.post('http://localhost:8080', )
 }
 
 // document.getElementById('background-image')  
