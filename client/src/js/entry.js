@@ -12,7 +12,7 @@ const renderer = require('./renderer');
 const stateManager = require('./stateManager');
 const imageHandler = require('./imageHandler');
 // const docPrep = require('./docPrep');
-const defaultImage = "./img/editorialbg.jpg";
+const defaultImage = "../img/editorialbg.jpg";
 
 // function handleImage(file, imageNumber) 
 // {
@@ -61,10 +61,15 @@ function handleTextFocus(evt)
 //v2
 function downloadCover(link, canvasId, filename) {
   var image = new Image();
-  image.crossOrigin = "*";
-  image.src = renderer.getCover();
+  image.crossOrigin = "Anonymous"
+  var ts = new Date().getTime();
+  image.src = renderer.getCover() + '?' + ts;
   link.href = image;
   link.download = filename;
+    // var cv = document.getElementById("ediCanvas").toDataURL("image/png");
+    // cv = cv.replace(/^data:image\/(png|jpg);base64,/, "");
+
+    // axios.post('http://localhost:8080', )
 }
 
 // document.getElementById('background-image')  
