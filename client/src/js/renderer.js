@@ -36,30 +36,29 @@ function wrapText(context, text, x, y, maxWidth, lineHeight)
 // Does the real work of making text changes appear on-screen.
 const renderState = () => 
 {
+    console.log('render state is called');
   const canvas = document.getElementById(ediCanvas);
   const ctx = canvas.getContext('2d');
   const state = stateManager.getState();
 
   // Background Image rendering
-  if (typeof state.image1.image !== 'undefined') 
-  {
-    ctx.drawImage(
-      state.image1.image,
-      state.image1.dx,
-      state.image1.dy,
-      state.image1.width,
-      state.image1.height,
-      0, 0, 
-      canvas.width, canvas.height);
-  }
+//   if (typeof state.image1.image !== 'undefined') 
+//   {
+//     ctx.drawImage(
+//       state.image1.image,
+//       state.image1.dx,
+//       state.image1.dy,
+//       state.image1.width,
+//       state.image1.height,
+//       0, 0, 
+//       canvas.width, canvas.height);
+//   }
 
   // Line 1
   const cHeight = parseInt(canvas.style.height, 10);
   const cWidth = parseInt(canvas.style.width, 10);
-  console.log(cWidth);
   textSize = Math.floor(cHeight * 0.063);
   canvasMaxWidth = Math.floor(cWidth - cWidth * 0.10);
-  console.log(canvasMaxWidth);
   ctx.font = `${textSize}px 'Cormorant Garamond'`;
   ctx.fillStyle = 'white';
   ctx.textAlign = 'left';

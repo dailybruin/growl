@@ -32,8 +32,7 @@ const setLine1 = (text) =>
   callSubscribers();
 };
 
-const setImage1 = (image) => 
-{
+const setImage1 = (image) => {
   state.image1 = image;
   callSubscribers();
 };

@@ -14,7 +14,7 @@ const stateManager = require('./stateManager');
 // const docPrep = require('./docPrep');
 const imageHandler = require('./imageHandler');
 const defaultImage = "../img/editorialbg.jpg";
-const canvas = require('./canvas');
+const canvasLib = require('./canvas');
 
 // CONSTANTS
 const CANVAS_HEIGHT = 320;
@@ -23,16 +23,25 @@ const CANVAS_WIDTH = 640;
 // DOM ELEMENTS
 var lineOne = document.getElementById('line1');
 var canvasContain = document.getElementById('ediCanvas-container');
+var canvas = null;
 
+// GLOBALS
+var currentImage = null;
 
 function resize (text) {
+    console.log('resize called!');
   text.style.height = 'auto';
   text.style.height = text.scrollHeight+'px';
 }
 
 function handleLine1(evt) {
   resize(lineOne);
-  stateManager.setLine1(evt.target.value);
+  var image = new Image();
+  image.onload = () => {
+    canvas.getContext('2d').drawImage(image, 0, 0);
+    stateManager.setLine1(evt.target.value);
+  };
+  image.src = currentImage;
 }
 
 function handleTextFocus(evt) {
@@ -63,13 +72,27 @@ function downloadCover(link, canvasId, filename) {
   lineOne.addEventListener('focus', handleTextFocus, false);
 
 function init() {
-    canvasContain.insertBefore(canvas.createHiDPICanvas(CANVAS_WIDTH, CANVAS_HEIGHT), canvasContain.firstChild);
+    canvas = canvasLib.createHiDPICanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+    canvasContain.insertBefore(canvas, canvasContain.firstChild);
+    
+    currentImage = defaultImage;
 
-    //const input1 = document.getElementById('line1');
-    const state = stateManager.getState();
+    imageHandler.renderImage(canvas, currentImage, 1).then( () => {
+        console.log('thenned');
+        const state = stateManager.getState();
 
-    lineOne.value = state.line1;
-    imageHandler.renderImage(defaultImage, 1);
-    resize(lineOne);
+        lineOne.value = state.line1;
+        console.log('canvases value is ');
+        console.log(lineOne.value);
+        resize(lineOne);
+    });
 }
 init();
+
+// get canvas
+// get context(?)
+// create image
+// load image
+// draw image
+// put text
+// set src

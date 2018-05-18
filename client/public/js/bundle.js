@@ -45,7 +45,7 @@ const stateManager = require('./stateManager');
 // const docPrep = require('./docPrep');
 const imageHandler = require('./imageHandler');
 const defaultImage = "../img/editorialbg.jpg";
-const canvas = require('./canvas');
+const canvasLib = require('./canvas');
 
 // CONSTANTS
 const CANVAS_HEIGHT = 320;
@@ -54,16 +54,25 @@ const CANVAS_WIDTH = 640;
 // DOM ELEMENTS
 var lineOne = document.getElementById('line1');
 var canvasContain = document.getElementById('ediCanvas-container');
+var canvas = null;
 
+// GLOBALS
+var currentImage = null;
 
 function resize (text) {
+    console.log('resize called!');
   text.style.height = 'auto';
   text.style.height = text.scrollHeight+'px';
 }
 
 function handleLine1(evt) {
   resize(lineOne);
-  stateManager.setLine1(evt.target.value);
+  var image = new Image();
+  image.onload = () => {
+    canvas.getContext('2d').drawImage(image, 0, 0);
+    stateManager.setLine1(evt.target.value);
+  };
+  image.src = currentImage;
 }
 
 function handleTextFocus(evt) {
@@ -94,16 +103,30 @@ function downloadCover(link, canvasId, filename) {
   lineOne.addEventListener('focus', handleTextFocus, false);
 
 function init() {
-    canvasContain.insertBefore(canvas.createHiDPICanvas(CANVAS_WIDTH, CANVAS_HEIGHT), canvasContain.firstChild);
+    canvas = canvasLib.createHiDPICanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+    canvasContain.insertBefore(canvas, canvasContain.firstChild);
+    
+    currentImage = defaultImage;
 
-    //const input1 = document.getElementById('line1');
-    const state = stateManager.getState();
+    imageHandler.renderImage(canvas, currentImage, 1).then( () => {
+        console.log('thenned');
+        const state = stateManager.getState();
 
-    lineOne.value = state.line1;
-    imageHandler.renderImage(defaultImage, 1);
-    resize(lineOne);
+        lineOne.value = state.line1;
+        console.log('canvases value is ');
+        console.log(lineOne.value);
+        resize(lineOne);
+    });
 }
 init();
+
+// get canvas
+// get context(?)
+// create image
+// load image
+// draw image
+// put text
+// set src
 },{"./canvas":1,"./imageHandler":3,"./renderer":4,"./stateManager":5}],3:[function(require,module,exports){
 // :: imageHandler.js
 /*
@@ -141,25 +164,32 @@ const calculateSourceCoordinates = (width, height, ratio) =>
   };
 };
 
-const renderImage = (src, imageNumber) => 
-{
-  const image = new Image();
-  image.onload = () => {
-    const ratio = 1;
-    const srcCoords = calculateSourceCoordinates(image.width, image.height, ratio);
-    const imageData = {
-      image,
-      width: srcCoords.width,
-      height: srcCoords.height,
-      dx: srcCoords.dx,
-      dy: srcCoords.dy
-    };
+const renderImage = (canvas, src, imageNumber) => {
+    return new Promise( (resolve) => {
+        const image = new Image();
+        image.src = src;
+        image.onload = () => {
+            console.log('loaded');
+            const ratio = 1;
+            const srcCoords = calculateSourceCoordinates(image.width, image.height, ratio);
+            const imageData = {
+                image,
+                width: srcCoords.width,
+                height: srcCoords.height,
+                dx: srcCoords.dx,
+                dy: srcCoords.dy
+            };
+            if (imageNumber === 1) {
+            stateManager.setImage1(imageData);
+            }
 
-    if (imageNumber === 1) {
-      stateManager.setImage1(imageData);
-    }
-  };
-  image.src = src;
+            //canvas.style.backgroundImage = "url('" + image.src + "')";
+            canvas.getContext('2d').drawImage(image, 0, 0);
+            resolve();
+        };
+        image.onerror = () => {
+        }
+    })
 };
 
 // const loadImageFromFile = (src, imageNumber) => {
@@ -217,30 +247,29 @@ function wrapText(context, text, x, y, maxWidth, lineHeight)
 // Does the real work of making text changes appear on-screen.
 const renderState = () => 
 {
+    console.log('render state is called');
   const canvas = document.getElementById(ediCanvas);
   const ctx = canvas.getContext('2d');
   const state = stateManager.getState();
 
   // Background Image rendering
-  if (typeof state.image1.image !== 'undefined') 
-  {
-    ctx.drawImage(
-      state.image1.image,
-      state.image1.dx,
-      state.image1.dy,
-      state.image1.width,
-      state.image1.height,
-      0, 0, 
-      canvas.width, canvas.height);
-  }
+//   if (typeof state.image1.image !== 'undefined') 
+//   {
+//     ctx.drawImage(
+//       state.image1.image,
+//       state.image1.dx,
+//       state.image1.dy,
+//       state.image1.width,
+//       state.image1.height,
+//       0, 0, 
+//       canvas.width, canvas.height);
+//   }
 
   // Line 1
   const cHeight = parseInt(canvas.style.height, 10);
   const cWidth = parseInt(canvas.style.width, 10);
-  console.log(cWidth);
   textSize = Math.floor(cHeight * 0.063);
   canvasMaxWidth = Math.floor(cWidth - cWidth * 0.10);
-  console.log(canvasMaxWidth);
   ctx.font = `${textSize}px 'Cormorant Garamond'`;
   ctx.fillStyle = 'white';
   ctx.textAlign = 'left';
@@ -297,8 +326,7 @@ const setLine1 = (text) =>
   callSubscribers();
 };
 
-const setImage1 = (image) => 
-{
+const setImage1 = (image) => {
   state.image1 = image;
   callSubscribers();
 };
