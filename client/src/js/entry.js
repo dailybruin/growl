@@ -8,55 +8,40 @@
 just lets us treat individal JS files like they're
 header files in C++: require('./imageHandler') is
 spiritually similar to #include "imageHandler" */
+// DEPENDENCIES
 const renderer = require('./renderer');
 const stateManager = require('./stateManager');
-const imageHandler = require('./imageHandler');
 // const docPrep = require('./docPrep');
+const imageHandler = require('./imageHandler');
 const defaultImage = "../img/editorialbg.jpg";
+const canvas = require('./canvas');
 
-// function handleImage(file, imageNumber) 
-// {
-//   imageHandler.loadImageFromFile(file, imageNumber);
-// }
+// CONSTANTS
+const CANVAS_HEIGHT = 320;
+const CANVAS_WIDTH = 640;
 
-// function handleBackgroundImage(evt) 
-// {
-//   handleImage(evt.target.files[0], 1);
-// }
+// DOM ELEMENTS
+var lineOne = document.getElementById('line1');
+var canvasContain = document.getElementById('ediCanvas-container');
 
 
-function resize (text) 
-{
+function resize (text) {
   text.style.height = 'auto';
   text.style.height = text.scrollHeight+'px';
 }
 
-function handleLine1(evt) 
-{
-  var text = document.getElementById("line1");
-  resize(text);
+function handleLine1(evt) {
+  resize(lineOne);
   stateManager.setLine1(evt.target.value);
 }
 
-function handleTextFocus(evt) 
-{
+function handleTextFocus(evt) {
   const target = evt.target;
 
-  if (evt.target.value.toUpperCase() === 'Enter Text Here!')
-  {
+  if (evt.target.value.toUpperCase() === 'Enter Text Here!') {
     target.value = '';
   }
 }
-
-
-//v1
-// function downloadCover(evt) 
-// {
-//   const target = evt.target;
-//   const cover = renderer.getCover();
-
-//   target.href = "editorial.jpg";
-// }
 
 //v2
 function downloadCover(link, canvasId, filename) {
@@ -67,34 +52,24 @@ function downloadCover(link, canvasId, filename) {
   link.href = image;
   link.download = filename;
 }
-
-// document.getElementById('background-image')  
-//     .addEventListener('change', handleBackgroundImage, false);
   
-  document.getElementById('line1')
-    .addEventListener('input', handleLine1, false);
+  lineOne.addEventListener('input', handleLine1, false);
 
 //v2
   document.getElementById('download').addEventListener('click', function() {
   downloadCover(this, 'ediCanvas', 'editorial.png');},
   false);
 
-  document.getElementById('line1')
-    .addEventListener('focus', handleTextFocus, false);
-  
-  //v1
-  // document.getElementById('download')
-  //   .addEventListener('click', downloadCover, false);
+  lineOne.addEventListener('focus', handleTextFocus, false);
 
-function init() 
-{
-  const input1 = document.getElementById('line1');
-  const state = stateManager.getState();
+function init() {
+    canvasContain.insertBefore(canvas.createHiDPICanvas(CANVAS_WIDTH, CANVAS_HEIGHT), canvasContain.firstChild);
 
-  input1.value = state.line1;
-  // defaultImage.setAttribute('crossOrigin', 'anonymous');
-  imageHandler.renderImage(defaultImage, 1);
-  resize(input1);
+    //const input1 = document.getElementById('line1');
+    const state = stateManager.getState();
+
+    lineOne.value = state.line1;
+    imageHandler.renderImage(defaultImage, 1);
+    resize(lineOne);
 }
-
 init();

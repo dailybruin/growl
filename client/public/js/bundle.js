@@ -1,4 +1,34 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+var PIXEL_RATIO = (function () {
+    var ctx = document.createElement("canvas").getContext("2d"),
+        dpr = window.devicePixelRatio || 1,
+        bsr = ctx.webkitBackingStorePixelRatio ||
+              ctx.mozBackingStorePixelRatio ||
+              ctx.msBackingStorePixelRatio ||
+              ctx.oBackingStorePixelRatio ||
+              ctx.backingStorePixelRatio || 1;
+
+    return dpr / bsr;
+})();
+
+
+var createHiDPICanvas = (w, h, ratio) => {
+    if (!ratio) { ratio = PIXEL_RATIO; }
+    var can = document.createElement("canvas");
+    can.id = "ediCanvas"
+    can.className = "cover__canvas"
+    can.width = w * ratio;
+    can.height = h * ratio;
+    can.style.width = w + "px";
+    can.style.height = h + "px";
+    can.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
+    return can;
+}
+
+module.exports = {
+    createHiDPICanvas
+};
+},{}],2:[function(require,module,exports){
 // :: entry.js
 /*
     Acts as our "entry-point," setting everything up for us.
@@ -9,55 +39,40 @@
 just lets us treat individal JS files like they're
 header files in C++: require('./imageHandler') is
 spiritually similar to #include "imageHandler" */
+// DEPENDENCIES
 const renderer = require('./renderer');
 const stateManager = require('./stateManager');
-const imageHandler = require('./imageHandler');
 // const docPrep = require('./docPrep');
+const imageHandler = require('./imageHandler');
 const defaultImage = "../img/editorialbg.jpg";
+const canvas = require('./canvas');
 
-// function handleImage(file, imageNumber) 
-// {
-//   imageHandler.loadImageFromFile(file, imageNumber);
-// }
+// CONSTANTS
+const CANVAS_HEIGHT = 320;
+const CANVAS_WIDTH = 640;
 
-// function handleBackgroundImage(evt) 
-// {
-//   handleImage(evt.target.files[0], 1);
-// }
+// DOM ELEMENTS
+var lineOne = document.getElementById('line1');
+var canvasContain = document.getElementById('ediCanvas-container');
 
 
-function resize (text) 
-{
+function resize (text) {
   text.style.height = 'auto';
   text.style.height = text.scrollHeight+'px';
 }
 
-function handleLine1(evt) 
-{
-  var text = document.getElementById("line1");
-  resize(text);
+function handleLine1(evt) {
+  resize(lineOne);
   stateManager.setLine1(evt.target.value);
 }
 
-function handleTextFocus(evt) 
-{
+function handleTextFocus(evt) {
   const target = evt.target;
 
-  if (evt.target.value.toUpperCase() === 'Enter Text Here!')
-  {
+  if (evt.target.value.toUpperCase() === 'Enter Text Here!') {
     target.value = '';
   }
 }
-
-
-//v1
-// function downloadCover(evt) 
-// {
-//   const target = evt.target;
-//   const cover = renderer.getCover();
-
-//   target.href = "editorial.jpg";
-// }
 
 //v2
 function downloadCover(link, canvasId, filename) {
@@ -68,38 +83,28 @@ function downloadCover(link, canvasId, filename) {
   link.href = image;
   link.download = filename;
 }
-
-// document.getElementById('background-image')  
-//     .addEventListener('change', handleBackgroundImage, false);
   
-  document.getElementById('line1')
-    .addEventListener('input', handleLine1, false);
+  lineOne.addEventListener('input', handleLine1, false);
 
 //v2
   document.getElementById('download').addEventListener('click', function() {
   downloadCover(this, 'ediCanvas', 'editorial.png');},
   false);
 
-  document.getElementById('line1')
-    .addEventListener('focus', handleTextFocus, false);
-  
-  //v1
-  // document.getElementById('download')
-  //   .addEventListener('click', downloadCover, false);
+  lineOne.addEventListener('focus', handleTextFocus, false);
 
-function init() 
-{
-  const input1 = document.getElementById('line1');
-  const state = stateManager.getState();
+function init() {
+    canvasContain.insertBefore(canvas.createHiDPICanvas(CANVAS_WIDTH, CANVAS_HEIGHT), canvasContain.firstChild);
 
-  input1.value = state.line1;
-  // defaultImage.setAttribute('crossOrigin', 'anonymous');
-  imageHandler.renderImage(defaultImage, 1);
-  resize(input1);
+    //const input1 = document.getElementById('line1');
+    const state = stateManager.getState();
+
+    lineOne.value = state.line1;
+    imageHandler.renderImage(defaultImage, 1);
+    resize(lineOne);
 }
-
 init();
-},{"./imageHandler":2,"./renderer":3,"./stateManager":4}],2:[function(require,module,exports){
+},{"./canvas":1,"./imageHandler":3,"./renderer":4,"./stateManager":5}],3:[function(require,module,exports){
 // :: imageHandler.js
 /*
     Does as it is named - handles loading and rendering of an image,
@@ -173,7 +178,7 @@ module.exports = {
   renderImage
 };
 
-},{"./stateManager":4}],3:[function(require,module,exports){
+},{"./stateManager":5}],4:[function(require,module,exports){
 // :: renderer.js
 /*
     Does the actual hard work of rendering out our image/text
@@ -230,13 +235,17 @@ const renderState = () =>
   }
 
   // Line 1
-  textSize = Math.floor(ctx.canvas.height * 0.063);
-  canvasMaxWidth = Math.floor(ctx.canvas.width - ctx.canvas.width * 0.10);
+  const cHeight = parseInt(canvas.style.height, 10);
+  const cWidth = parseInt(canvas.style.width, 10);
+  console.log(cWidth);
+  textSize = Math.floor(cHeight * 0.063);
+  canvasMaxWidth = Math.floor(cWidth - cWidth * 0.10);
+  console.log(canvasMaxWidth);
   ctx.font = `${textSize}px 'Cormorant Garamond'`;
   ctx.fillStyle = 'white';
   ctx.textAlign = 'left';
-  textX = ctx.canvas.width / 20; //reciprocal of half maxwidth scaling factor 3 lines up
-  textY = ctx.canvas.height / 3.5;
+  textX = cWidth / 20; //reciprocal of half maxwidth scaling factor 3 lines up
+  textY = cHeight / 3.5;
   wrapText(ctx, state.line1, textX, textY, canvasMaxWidth, textSize + 10);
 };
 
@@ -253,7 +262,7 @@ module.exports = {
   getCover
 };
 
-},{"./stateManager":4}],4:[function(require,module,exports){
+},{"./stateManager":5}],5:[function(require,module,exports){
 // :: stateManager.js
 /*
     Sort of like a go-between for the renderer and entry.
@@ -303,4 +312,4 @@ module.exports = {
   getState
 };
 
-},{}]},{},[1]);
+},{}]},{},[2]);

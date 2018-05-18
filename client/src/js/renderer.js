@@ -54,13 +54,17 @@ const renderState = () =>
   }
 
   // Line 1
-  textSize = Math.floor(ctx.canvas.height * 0.063);
-  canvasMaxWidth = Math.floor(ctx.canvas.width - ctx.canvas.width * 0.10);
+  const cHeight = parseInt(canvas.style.height, 10);
+  const cWidth = parseInt(canvas.style.width, 10);
+  console.log(cWidth);
+  textSize = Math.floor(cHeight * 0.063);
+  canvasMaxWidth = Math.floor(cWidth - cWidth * 0.10);
+  console.log(canvasMaxWidth);
   ctx.font = `${textSize}px 'Cormorant Garamond'`;
   ctx.fillStyle = 'white';
   ctx.textAlign = 'left';
-  textX = ctx.canvas.width / 20; //reciprocal of half maxwidth scaling factor 3 lines up
-  textY = ctx.canvas.height / 3.5;
+  textX = cWidth / 20; //reciprocal of half maxwidth scaling factor 3 lines up
+  textY = cHeight / 3.5;
   wrapText(ctx, state.line1, textX, textY, canvasMaxWidth, textSize + 10);
 };
 
