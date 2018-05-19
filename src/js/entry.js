@@ -87,11 +87,3 @@ function init() {
     });
 }
 init();
-
-// get canvas
-// get context(?)
-// create image
-// load image
-// draw image
-// put text
-// set src

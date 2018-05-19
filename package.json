@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run dev",
-    "dev": "export NODE_ENV=development && concurrently \"node index.js\" \"npm run dev-sass\" \"npm run compile\"",
+    "dev": "concurrently \"node index.js\" \"npm run dev-sass\" \"npm run compile\"",
     "compile": "browserify ./src/js/entry.js -o ./public/js/bundle.js",
     "dev-sass": "node-sass -r --output-style compressed ./src/scss -o ./public/styles --watch"
   },
@@ -15,9 +15,5 @@
     "node-sass": "^4.7.2"
   },
   "dependencies": {
-    "cors": "^2.8.4",
-    "express": "^4.16.2",
-    "express-session": "1.15.6",
-    "axios": "^0.18.0"
   }
 }

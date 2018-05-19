@@ -7,7 +7,7 @@
 // ::
 
 const state = {
-  line1: '\"The Undergraduate Students Association Council was created for the purpose of giving students agency in a university riddled with bureaucracy and administrative jargon. Too bad this year’s council has decided to cede its authority to the very administrators it should be holding accountable.\"',
+  line1: '',
   image1: {}
 };
 const subscribers = [];
