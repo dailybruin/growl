@@ -36,7 +36,6 @@ function wrapText(context, text, x, y, maxWidth, lineHeight)
 // Does the real work of making text changes appear on-screen.
 const renderState = () => 
 {
-    console.log('render state is called');
   const canvas = document.getElementById(ediCanvas);
   const ctx = canvas.getContext('2d');
   const state = stateManager.getState();
@@ -72,7 +71,7 @@ stateManager.addSubscriber(renderState);
 // Allows you to get the generated quote.
 const getCover = () => 
 {
-  return document.getElementById(ediCanvas).toDataURL();
+  return document.getElementById('ediCanvas').toDataURL();
 };
 
 module.exports = {

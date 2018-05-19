@@ -60,7 +60,6 @@ var canvas = null;
 var currentImage = null;
 
 function resize (text) {
-    console.log('resize called!');
   text.style.height = 'auto';
   text.style.height = text.scrollHeight+'px';
 }
@@ -84,20 +83,25 @@ function handleTextFocus(evt) {
 }
 
 //v2
-function downloadCover(link, canvasId, filename) {
-  var image = new Image();
-  image.crossOrigin = "Anonymous"
-  var ts = new Date().getTime();
-  image.src = renderer.getCover() + '?' + ts;
-  link.href = image;
-  link.download = filename;
+function downloadCover() {
+
+    var link = document.createElement("a");
+    link.download = "image.png";
+  
+    canvas.toBlob(function(blob) {
+      link.href = URL.createObjectURL(blob);
+      console.log(blob);
+      console.log(link.href);
+      link.click();
+    },'image/png');
+  
 }
   
   lineOne.addEventListener('input', handleLine1, false);
 
 //v2
   document.getElementById('download').addEventListener('click', function() {
-  downloadCover(this, 'ediCanvas', 'editorial.png');},
+  downloadCover();},
   false);
 
   lineOne.addEventListener('focus', handleTextFocus, false);
@@ -109,12 +113,9 @@ function init() {
     currentImage = defaultImage;
 
     imageHandler.renderImage(canvas, currentImage, 1).then( () => {
-        console.log('thenned');
         const state = stateManager.getState();
 
         lineOne.value = state.line1;
-        console.log('canvases value is ');
-        console.log(lineOne.value);
         resize(lineOne);
     });
 }
@@ -247,7 +248,6 @@ function wrapText(context, text, x, y, maxWidth, lineHeight)
 // Does the real work of making text changes appear on-screen.
 const renderState = () => 
 {
-    console.log('render state is called');
   const canvas = document.getElementById(ediCanvas);
   const ctx = canvas.getContext('2d');
   const state = stateManager.getState();
@@ -283,7 +283,7 @@ stateManager.addSubscriber(renderState);
 // Allows you to get the generated quote.
 const getCover = () => 
 {
-  return document.getElementById(ediCanvas).toDataURL();
+  return document.getElementById('ediCanvas').toDataURL();
 };
 
 module.exports = {
