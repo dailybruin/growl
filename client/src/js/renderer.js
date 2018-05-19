@@ -13,6 +13,8 @@ const ediCanvas = 'ediCanvas';
 // over to the next line, and doesn't just run off screen.
 function wrapText(context, text, x, y, maxWidth, lineHeight) 
 {
+  let lines = [];
+  
   words = text.split(' ');
   line = '';
 
@@ -21,7 +23,8 @@ function wrapText(context, text, x, y, maxWidth, lineHeight)
     testLine = line + words[k] + ' ';
     if( maxWidth < context.measureText(testLine).width && k > 0 ) 
     {
-      context.fillText(line, x, y);
+      lines.push({line: line, x: x, y: y});
+      //context.fillText(line, x, y);
       line = words[k] + ' ';
       y += lineHeight;
     }
@@ -30,7 +33,11 @@ function wrapText(context, text, x, y, maxWidth, lineHeight)
       line = testLine;
     }
   }
-  context.fillText(line, x, y);
+  lines.push({line: line, x: x, y: y});
+  console.log(lines);
+  //context.fillText(line, x, y);
+  context.textAlign = 'right';
+  context.fillText('This is the footer', maxWidth, y += lineHeight);
 }
 
 // Does the real work of making text changes appear on-screen.
