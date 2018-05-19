@@ -15,6 +15,8 @@ function wrapText(context, text, x, maxWidth, maxHeight, lineHeight)
 {
   let lines = [];
   const FOOTER_LENGTH = 241;
+  const FOOTER_HEIGHT = 43;
+  const LINE_LIMIT = 7;
   let y = 0;
 
   words = text.split(' ');
@@ -36,7 +38,10 @@ function wrapText(context, text, x, maxWidth, maxHeight, lineHeight)
   }
   lines.push({line: line, y: y});
   console.log(lines);
-  
+
+  // Cut this off at seven lines
+  lines = lines.slice(0, 7);
+    
   // get the length of all the lines so we can center them
   let totalLineHeight = (lines.length) * lineHeight;
   let startPos = 0.5 * maxHeight - 0.5 * totalLineHeight;
@@ -48,7 +53,8 @@ function wrapText(context, text, x, maxWidth, maxHeight, lineHeight)
   img.onload = function() {
       // draw the footer after the last line - the value for width is hardcoded
       // in the svg and in the FOOTER_LENGTH variable
-      context.drawImage(img, maxWidth - FOOTER_LENGTH, lines[lines.length -1].y + startPos + (lineHeight/2));
+      context.drawImage(img, maxWidth - FOOTER_LENGTH, maxHeight * 0.85 - FOOTER_HEIGHT * 0.5);
+      //context.drawImage(img, maxWidth - FOOTER_LENGTH, lines[lines.length -1].y + startPos + (lineHeight/2));
   }
   img.src = "../img/footer.svg";
 }
@@ -56,6 +62,7 @@ function wrapText(context, text, x, maxWidth, maxHeight, lineHeight)
 // Does the real work of making text changes appear on-screen.
 const renderState = () => 
 {
+    console.log('render state is called');
   const canvas = document.getElementById(ediCanvas);
   const ctx = canvas.getContext('2d');
   const state = stateManager.getState();
@@ -92,7 +99,7 @@ stateManager.addSubscriber(renderState);
 // Allows you to get the generated quote.
 const getCover = () => 
 {
-  return document.getElementById('ediCanvas').toDataURL();
+  return document.getElementById(ediCanvas).toDataURL();
 };
 
 module.exports = {
