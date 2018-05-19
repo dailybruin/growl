@@ -34,25 +34,32 @@ const calculateSourceCoordinates = (width, height, ratio) =>
   };
 };
 
-const renderImage = (src, imageNumber) => 
-{
-  const image = new Image();
-  image.onload = () => {
-    const ratio = 1;
-    const srcCoords = calculateSourceCoordinates(image.width, image.height, ratio);
-    const imageData = {
-      image,
-      width: srcCoords.width,
-      height: srcCoords.height,
-      dx: srcCoords.dx,
-      dy: srcCoords.dy
-    };
+const renderImage = (canvas, src, imageNumber) => {
+    return new Promise( (resolve) => {
+        const image = new Image();
+        image.src = src;
+        image.onload = () => {
+            console.log('loaded');
+            const ratio = 1;
+            const srcCoords = calculateSourceCoordinates(image.width, image.height, ratio);
+            const imageData = {
+                image,
+                width: srcCoords.width,
+                height: srcCoords.height,
+                dx: srcCoords.dx,
+                dy: srcCoords.dy
+            };
+            if (imageNumber === 1) {
+            stateManager.setImage1(imageData);
+            }
 
-    if (imageNumber === 1) {
-      stateManager.setImage1(imageData);
-    }
-  };
-  image.src = src;
+            //canvas.style.backgroundImage = "url('" + image.src + "')";
+            canvas.getContext('2d').drawImage(image, 0, 0);
+            resolve();
+        };
+        image.onerror = () => {
+        }
+    })
 };
 
 // const loadImageFromFile = (src, imageNumber) => {
