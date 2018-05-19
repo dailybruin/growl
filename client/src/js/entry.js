@@ -13,7 +13,7 @@ const renderer = require('./renderer');
 const stateManager = require('./stateManager');
 // const docPrep = require('./docPrep');
 const imageHandler = require('./imageHandler');
-const defaultImage = "../img/editorialbg.jpg";
+const defaultImage = "../img/blackBackground.jpg";
 const canvasLib = require('./canvas');
 
 // CONSTANTS
