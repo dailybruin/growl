@@ -1,7 +1,6 @@
 # Growl 🦁 
 
 [![Dev dependencies](https://david-dm.org/daily-bruin/growl/dev-status.svg?style=flat)](https://david-dm.org/daily-bruin/growl?type=dev)
-
 [![license](https://img.shields.io/github/license/daily-bruin/sources.svg)]()
 
 Growl is an internal tool used by the Daily Bruin staff to generate downloaded poll quotes from the Editorial Board. It was created so staffers don't have to manually create the graphics they use to source and saves time doing so.
