@@ -1,0 +1,17 @@
+@media only screen {
+    .container {
+        flex-direction: column;
+    }
+}
+
+@media only screen and (min-width: 24em) {
+    .inputs__text {
+        font-size: 2em;
+    }
+}
+
+@media only screen and (min-width: 48em) { 
+    .container {
+        flex-direction: row;
+    }
+}

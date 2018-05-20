@@ -1,19 +1,19 @@
 {
-  "name": "edi-gen",
+  "name": "growl",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "gulpfile.js",
   "scripts": {
     "start": "npm run dev",
-    "dev": "concurrently \"node index.js\" \"npm run dev-sass\" \"npm run compile\"",
-    "compile": "browserify ./src/js/entry.js -o ./public/js/bundle.js",
-    "dev-sass": "node-sass -r --output-style compressed ./src/scss -o ./public/styles --watch"
+    "dev": "concurrently \"npm run dev-js\" \"npm run dev-html\"",
+    "dev-js": "browserify ./src/js/entry.js -o ./public/js/bundle.js",
+    "dev-html": "gulp"
   },
   "devDependencies": {
     "browserify": "^16.2.2",
     "concurrently": "^3.5.1",
-    "node-sass": "^4.7.2"
+    "gulp": "^3.9.1",
+    "gulp-sass": "^4.0.1"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
